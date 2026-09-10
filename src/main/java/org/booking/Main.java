@@ -1,17 +1,33 @@
 package org.booking;
 
+import org.booking.domain.car.CarMapper;
+import org.booking.domain.car.CarRepository;
+import org.booking.domain.user.UserMapper;
+import org.booking.domain.user.UserRepository;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
+
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
-    public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+    public static void main(String[] args) throws IOException, URISyntaxException {
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
-        }
+        final Path path = Path.of("src/main/resources/cars_inline_db.txt");
+        URL usersDbUrl = Main.class.getResource("/users_inline_db.txt");
+        final Path userDb = Path.of(usersDbUrl.toURI());
+
+        CarMapper carMapper = new CarMapper();
+        UserMapper userMapper = new UserMapper();
+
+        CarRepository carRepository = new CarRepository(path, carMapper);
+        UserRepository userRepository = new UserRepository(userDb, userMapper);
+
+
+//        carRepository.getAll();
+        userRepository.getAll().stream().forEach(System.out::println);
+
     }
 }

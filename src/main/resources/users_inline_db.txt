@@ -1,0 +1,10 @@
+1;Anna Kowalska
+2;John Smith
+3;Marie Dubois
+4;Hiroshi Tanaka
+5;Sofia Rossi
+6;Carlos Garcia
+7;Emma Müller
+8;Olga Ivanova
+9;Liam O'Brien
+10;Fatima Al-Farsi

@@ -1,0 +1,6 @@
+1;WA12345;150.0;Toyota;false
+2;KR54321;180.5;Volkswagen;false
+3;GD98765;250.0;BMW;false
+4;PO11223;99.0;Skoda;false
+5;LU44556;320.0;Audi;false
+6;WA77889;410.0;Mercedes;false
