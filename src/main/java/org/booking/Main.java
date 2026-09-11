@@ -1,9 +1,8 @@
 package org.booking;
 
-import org.booking.domain.car.CarMapper;
-import org.booking.domain.car.CarRepository;
-import org.booking.domain.user.UserMapper;
-import org.booking.domain.user.UserRepository;
+import org.booking.menu.Menu;
+import org.booking.menu.MenuService;
+import org.booking.reader.ConsoleInputHandler;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -19,15 +18,18 @@ public class Main {
         URL usersDbUrl = Main.class.getResource("/users_inline_db.txt");
         final Path userDb = Path.of(usersDbUrl.toURI());
 
-        CarMapper carMapper = new CarMapper();
-        UserMapper userMapper = new UserMapper();
+        ConsoleInputHandler consoleInputHandler = new ConsoleInputHandler();
 
-        CarRepository carRepository = new CarRepository(path, carMapper);
-        UserRepository userRepository = new UserRepository(userDb, userMapper);
+        MenuService menuService = new MenuService();
+        Menu menu = new Menu(menuService);
 
+        while (true) {
+            menu.start();
+            menu.promptUser("Select Option");
 
-//        carRepository.getAll();
-        userRepository.getAll().stream().forEach(System.out::println);
+            String selectedOption = consoleInputHandler.readLine();
+            menu.handleUserInput(selectedOption);
+        }
 
     }
 }

@@ -2,7 +2,7 @@ package org.booking.domain.car;
 
 import org.booking.domain.repository.LineMapper;
 
-public class CarMapper implements LineMapper<Car> {
+class CarMapper implements LineMapper<Car> {
 
     @Override
     public String[] parseLine(String line) {

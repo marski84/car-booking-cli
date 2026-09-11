@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Slf4j
-public class UserRepository extends FileRepository<User> implements FileRepositoryInterface<User> {
+class UserRepository extends FileRepository<User> implements FileRepositoryInterface<User> {
     private final Set<User> userList = new HashSet<>();
 
     public UserRepository(final Path path, LineMapper<User> lineMapper) {

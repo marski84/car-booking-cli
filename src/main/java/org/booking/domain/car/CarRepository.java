@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Slf4j
-public class CarRepository extends FileRepository<Car> implements FileRepositoryInterface<Car> {
+class CarRepository extends FileRepository<Car> implements FileRepositoryInterface<Car> {
 
     private final Set<Car> carList = new HashSet<>();
 
