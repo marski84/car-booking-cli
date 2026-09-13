@@ -17,13 +17,16 @@ import java.util.Set;
 class CarRepository extends FileRepository<Car> implements FileRepositoryInterface<Car> {
 
     private final Set<Car> carList = new HashSet<>();
+    private boolean loaded = false;
 
     public CarRepository(Path path, LineMapper<Car> lineMapper) {
         super(path, lineMapper);
     }
 
-    @Override
-    public Set<Car> getAll() {
+    private void ensureLoaded() {
+        if (loaded) {
+            return;
+        }
         try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
             String line;
 
@@ -35,12 +38,18 @@ class CarRepository extends FileRepository<Car> implements FileRepositoryInterfa
         } catch (IOException e) {
             log.error("problem accessing car db file: {}", e.getMessage());
         }
-        carList.stream().forEach(c -> log.info(String.valueOf(c)));
+        loaded = true;
+    }
+
+    @Override
+    public Set<Car> getAll() {
+        ensureLoaded();
         return Set.copyOf(carList);
     }
 
     @Override
     public Car get(long id) {
+        ensureLoaded();
         return carList.stream()
                 .filter(car -> car.getId() == id)
                 .findFirst()
@@ -53,6 +62,14 @@ class CarRepository extends FileRepository<Car> implements FileRepositoryInterfa
     @Override
     public void save(Car item) {
 
+    }
+
+    public long getMaxId() {
+        ensureLoaded();
+        return carList.stream()
+                .mapToLong(Car::getId)
+                .max()
+                .orElse(0L);
     }
 
 

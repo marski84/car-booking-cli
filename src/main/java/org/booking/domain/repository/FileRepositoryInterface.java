@@ -8,4 +8,6 @@ public interface FileRepositoryInterface<T> {
     T get(long id);
 
     void save(T item);
+
+    long getMaxId();
 }

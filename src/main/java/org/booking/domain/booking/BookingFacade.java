@@ -16,16 +16,20 @@ public class BookingFacade implements Facade<Booking> {
 
     @Override
     public Set<Booking> getAll() {
-        return Set.of();
+        return bookingRepository.getAll();
     }
 
     @Override
     public Booking get(final long id) {
-        return null;
+        return bookingRepository.get(id);
     }
 
     @Override
     public void save(final Booking item) {
+        this.bookingRepository.save(item);
+    }
 
+    public long getMaxId() {
+        return bookingRepository.getMaxId();
     }
 }

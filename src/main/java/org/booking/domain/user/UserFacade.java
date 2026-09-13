@@ -21,16 +21,16 @@ public class UserFacade implements Facade<User> {
 
     @Override
     public Set<User> getAll() {
-        return Set.of();
+        return userRepository.getAll();
     }
 
     @Override
-    public User get(final long id) {
-        return null;
+    public User get(long id) {
+        return userRepository.get(id);
     }
 
     @Override
-    public void save(final User item) {
+    public void save(User item) {
 
     }
 }

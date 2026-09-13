@@ -4,4 +4,6 @@ public interface LineMapper<T> {
     String[] parseLine(String line);
 
     T serialize(String[] params);
+
+    String toLine(T item);
 }

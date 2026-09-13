@@ -16,13 +16,16 @@ import java.util.Set;
 @Slf4j
 class UserRepository extends FileRepository<User> implements FileRepositoryInterface<User> {
     private final Set<User> userList = new HashSet<>();
+    private boolean loaded = false;
 
     public UserRepository(final Path path, LineMapper<User> lineMapper) {
         super(path, lineMapper);
     }
 
-    @Override
-    public Set<User> getAll() {
+    private void ensureLoaded() {
+        if (loaded) {
+            return;
+        }
         try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
             String line;
 
@@ -33,11 +36,18 @@ class UserRepository extends FileRepository<User> implements FileRepositoryInter
         } catch (IOException e) {
             log.error("problem accessing user db file: {}", e.getMessage());
         }
+        loaded = true;
+    }
+
+    @Override
+    public Set<User> getAll() {
+        ensureLoaded();
         return Set.copyOf(userList);
     }
 
     @Override
     public User get(long id) {
+        ensureLoaded();
         return userList.stream()
                 .filter(user -> user.getId() == id)
                 .findFirst()
@@ -50,6 +60,15 @@ class UserRepository extends FileRepository<User> implements FileRepositoryInter
     @Override
     public void save(User item) {
 
+    }
+
+
+    public long getMaxId() {
+        ensureLoaded();
+        return userList.stream()
+                .mapToLong(User::getId)
+                .max()
+                .orElse(0L);
     }
 
 

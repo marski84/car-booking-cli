@@ -1,5 +1,5 @@
 package org.booking.domain.booking;
 
-enum BookingStatus {
+public enum BookingStatus {
     ACTIVE, CANCELLED, COMPLETED
 }

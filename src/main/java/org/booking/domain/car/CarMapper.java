@@ -13,4 +13,9 @@ class CarMapper implements LineMapper<Car> {
     public Car serialize(String[] params) {
         return Car.fromParams(params);
     }
+
+    @Override
+    public String toLine(final Car item) {
+        return "";
+    }
 }

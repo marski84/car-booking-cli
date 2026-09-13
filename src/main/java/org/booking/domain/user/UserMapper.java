@@ -13,4 +13,9 @@ class UserMapper implements LineMapper<User> {
     public User serialize(String[] params) {
         return User.fromParams(params);
     }
+
+    @Override
+    public String toLine(final User item) {
+        return "";
+    }
 }

@@ -16,16 +16,16 @@ public class CarFacade implements Facade<Car> {
 
     @Override
     public Set<Car> getAll() {
-        return Set.of();
+        return carRepository.getAll();
     }
 
     @Override
-    public Car get(final long id) {
-        return null;
+    public Car get(long id) {
+        return carRepository.get(id);
     }
 
     @Override
-    public void save(final Car item) {
+    public void save(Car item) {
 
     }
 }

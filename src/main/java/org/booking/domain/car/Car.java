@@ -2,6 +2,7 @@ package org.booking.domain.car;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -11,8 +12,9 @@ import java.math.BigDecimal;
 @Builder
 @Getter
 @ToString
+@EqualsAndHashCode
 public class Car {
-    private final int id;
+    private final long id;
     private final String registrationNumber;
     private final Brand brand;
     private final boolean electric;
@@ -20,7 +22,7 @@ public class Car {
 
     public static Car fromParams(String[] params) {
         return Car.builder()
-                .id(Integer.parseInt(params[0]))
+                .id(Long.parseLong(params[0]))
                 .registrationNumber(params[1])
                 .pricePerDay(new BigDecimal(params[2]))
                 .brand(Brand.valueOf(params[3]))
@@ -28,7 +30,7 @@ public class Car {
                 .build();
     }
 
-    public static Car fromDto(CarDto dto, int id) {
+    public static Car fromDto(CarDto dto, long id) {
         return Car.builder()
                 .id(id)
                 .registrationNumber(dto.registrationNumber())
