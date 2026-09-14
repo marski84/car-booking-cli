@@ -45,7 +45,7 @@ public class Menu {
 
         switch (option) {
             case 1 -> this.handleBookCar();
-            case 2 -> this.menuService.handleDeleteBooking();
+            case 2 -> this.handleDeleteBooking();
             case 3 -> this.menuService.viewAllBookedCars();
             case 4 -> this.menuService.viewAllBookings();
             case 5 -> this.menuService.viewAvailableCars();
@@ -59,14 +59,40 @@ public class Menu {
         }
     }
 
+    private void handleDeleteBooking() throws IOException {
+        this.menuService.viewAllBookings();
+        Optional<Long> bookingId = readLong("Input booking id you want to delete");
+        if (bookingId.isEmpty()) {
+            return;
+        }
+
+        if (!menuService.bookingsIds().contains(bookingId.get())) {
+            promptUser("Booking either not found or in invalid status");
+            return;
+        }
+
+        this.menuService.deleteBooking(bookingId.get());
+
+    }
+
     private void handleBookCar() throws IOException {
         this.menuService.viewAllUsers();
         promptUser("Input user id");
         String userId = consoleInputHandler.readLine();
 
-        promptUser("Input car id");
         this.menuService.viewAvailableCars();
+        promptUser("Input car id");
         String carId = consoleInputHandler.readLine();
+
+        Optional<Long> parsedCarId = parseLong(carId);
+        if (parsedCarId.isEmpty()) {
+            return;
+        }
+
+        if (menuService.activeBookedCarIds().contains(parsedCarId.get())) {
+            promptUser("Car with id already booked");
+            return;
+        }
 
         Optional<LocalDate> startDate = readDate("Input booking start date in format: YYYY-MM-DD");
         if (startDate.isEmpty()) {
@@ -88,6 +114,21 @@ public class Menu {
             return Optional.of(LocalDate.parse(rawDate.trim(), DATE_FORMATTER));
         } catch (DateTimeParseException e) {
             System.out.println("Invalid date format: \"" + rawDate + "\". Expected format: YYYY-MM-DD.");
+            return Optional.empty();
+        }
+    }
+
+    private Optional<Long> readLong(String promptMessage) throws IOException {
+        promptUser(promptMessage);
+        String raw = consoleInputHandler.readLine();
+        return parseLong(raw);
+    }
+
+    private Optional<Long> parseLong(String raw) {
+        try {
+            return Optional.of(Long.parseLong(raw.trim()));
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid id: \"" + raw + "\". Expected a number.");
             return Optional.empty();
         }
     }

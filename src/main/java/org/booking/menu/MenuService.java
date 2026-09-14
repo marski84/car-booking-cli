@@ -9,7 +9,6 @@ import org.booking.domain.car.CarFacade;
 import org.booking.domain.user.User;
 import org.booking.domain.user.UserFacade;
 
-import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
@@ -25,10 +24,10 @@ public class MenuService {
     private final CarFacade carFacade;
     private final BookingFacade bookingFacade;
 
-    public MenuService() throws URISyntaxException {
-        Path userDb = Path.of(getClass().getResource("/users_inline_db.txt").toURI());
-        Path carsDb = Path.of(getClass().getResource("/cars_inline_db.txt").toURI());
-        Path bookingsDb = Path.of(getClass().getResource("/bookings_inline_db.txt").toURI());
+    public MenuService() {
+        Path userDb = Path.of("src/main/resources/users_inline_db.txt");
+        Path carsDb = Path.of("src/main/resources/cars_inline_db.txt");
+        Path bookingsDb = Path.of("src/main/resources/bookings_inline_db.txt");
         this.userFacade = UserFacade.create(userDb);
         this.carFacade = CarFacade.create(carsDb);
         this.bookingFacade = BookingFacade.create(bookingsDb);
@@ -63,10 +62,23 @@ public class MenuService {
         }
     }
 
-    void handleDeleteBooking() {
+    void deleteBooking(long bookingId) {
+        try {
+            this.bookingFacade.remove(bookingId);
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
-    private Set<Long> activeBookedCarIds() {
+    public Set<Long> bookingsIds() {
+        return bookingFacade.getAll()
+                .stream()
+                .filter(b -> b.getBookingStatus() != BookingStatus.CANCELLED && b.getBookingStatus() != BookingStatus.COMPLETED)
+                .map(Booking::getId)
+                .collect(Collectors.toSet());
+    }
+
+    public Set<Long> activeBookedCarIds() {
         return bookingFacade.getAll().stream()
                 .filter(b -> b.getBookingStatus() == BookingStatus.ACTIVE)
                 .map(Booking::getCarId)
@@ -82,7 +94,10 @@ public class MenuService {
     }
 
     void viewAllBookings() {
-        bookingFacade.getAll().forEach(b -> System.out.println(b.toString()));
+        bookingFacade.getAll()
+                .stream()
+                .sorted(Comparator.comparing(Booking::getId))
+                .forEach(b -> System.out.println(b));
     }
 
     void viewAvailableCars() {

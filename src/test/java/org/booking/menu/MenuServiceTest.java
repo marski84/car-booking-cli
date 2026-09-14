@@ -17,11 +17,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.math.BigDecimal;
-import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -62,7 +62,7 @@ class MenuServiceTest {
     }
 
     @BeforeEach
-    void setUp() throws URISyntaxException {
+    void setUp() {
         menuService = new MenuService(userFacade, carFacade, bookingFacade);
         outContent = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outContent));
@@ -135,5 +135,23 @@ class MenuServiceTest {
         assertThat(output).contains("id=1");
         assertThat(output).contains("id=2");
         verify(bookingFacade).getAll();
+    }
+
+    @Test
+    void deleteBookingShouldDelegateToFacade() {
+        // when
+        menuService.deleteBooking(1);
+        // then
+        verify(bookingFacade).remove(1);
+    }
+
+    @Test
+    void deleteBookingShouldNotCrashWhenFacadeThrows() {
+        // given
+        doThrow(new RuntimeException("Booking with id 1 not found!")).when(bookingFacade).remove(1);
+        // when
+        menuService.deleteBooking(1);
+        // then
+        assertThat(outContent.toString()).contains("Booking with id 1 not found!");
     }
 }

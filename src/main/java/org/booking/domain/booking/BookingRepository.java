@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Slf4j
@@ -73,6 +74,8 @@ class BookingRepository extends FileRepository<Booking> implements FileRepositor
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        this.bookings.add(item);
+
 
     }
 
@@ -83,5 +86,23 @@ class BookingRepository extends FileRepository<Booking> implements FileRepositor
                 .mapToLong(Booking::getId)
                 .max()
                 .orElse(0L);
+    }
+
+    void remove(long bookingId) {
+        Booking original = this.get(bookingId);
+        Booking cancelled = original.cancelled();
+
+        bookings.remove(original);
+        bookings.add(cancelled);
+
+        List<String> lines = bookings.stream()
+                .map(lineMapper::toLine)
+                .toList();
+
+        try {
+            Files.write(this.path, lines, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
