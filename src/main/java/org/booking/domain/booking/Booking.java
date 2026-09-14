@@ -14,7 +14,7 @@ import java.time.Duration;
 import java.time.Instant;
 
 @AllArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 @Getter
 @ToString
 @EqualsAndHashCode
@@ -51,7 +51,13 @@ public class Booking {
         long days = (seconds + 86399) / 86400;
         this.price = car.getPricePerDay().multiply(BigDecimal.valueOf(days));
         this.bookingStatus = BookingStatus.ACTIVE;
+    }
 
+    public Booking cancelled() {
+        return this.toBuilder()
+                .bookingStatus(BookingStatus.CANCELLED)
+                .price(BigDecimal.ZERO)
+                .build();
     }
 
     public static Booking fromParams(String[] params) {
