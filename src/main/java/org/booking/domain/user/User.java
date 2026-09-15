@@ -2,11 +2,15 @@ package org.booking.domain.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 @AllArgsConstructor
 @Getter
 @Builder
+@ToString
+@EqualsAndHashCode
 public class User {
     private long id;
     private String name;

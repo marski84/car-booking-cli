@@ -46,12 +46,11 @@ class CarRepositoryTest {
     }
 
     @Test
-    void getShouldThrowWhenCarListNotInitiated() {
+    void getShouldThrowWhenCarNotFound() {
         // given
-        int testId = 1;
-        String testBrand = "Toyota";
+        int testId = 999;
         // when, then
         assertThatThrownBy(() -> carRepository.get(testId))
-                .hasMessageContaining("id 1");
+                .hasMessageContaining("id 999");
     }
 }

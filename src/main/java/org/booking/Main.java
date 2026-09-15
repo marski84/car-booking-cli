@@ -21,14 +21,15 @@ public class Main {
         ConsoleInputHandler consoleInputHandler = new ConsoleInputHandler();
 
         MenuService menuService = new MenuService();
-        Menu menu = new Menu(menuService);
+        Menu menu = new Menu(menuService, consoleInputHandler);
 
         while (true) {
             menu.start();
             menu.promptUser("Select Option");
-
             String selectedOption = consoleInputHandler.readLine();
             menu.handleUserInput(selectedOption);
+            menu.promptUser("Press enter to continue...");
+            consoleInputHandler.readLine();
         }
 
     }

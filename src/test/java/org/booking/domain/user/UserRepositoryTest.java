@@ -46,11 +46,11 @@ class UserRepositoryTest {
     }
 
     @Test
-    void getShouldThrowWhenUserListNotInitiated() {
+    void getShouldThrowWhenUserNotFound() {
         // given
-        long testId = 1;
+        long testId = 999;
         // when, then
         assertThatThrownBy(() -> userRepository.get(testId))
-                .hasMessageContaining("id 1");
+                .hasMessageContaining("id 999");
     }
 }

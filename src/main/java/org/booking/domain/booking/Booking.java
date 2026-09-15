@@ -2,7 +2,9 @@ package org.booking.domain.booking;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import org.booking.domain.car.Car;
 import org.booking.domain.user.User;
 
@@ -10,17 +12,17 @@ import java.math.BigDecimal;
 import java.time.DateTimeException;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.concurrent.atomic.AtomicLong;
 
 @AllArgsConstructor
 @Builder
 @Getter
+@ToString
+@EqualsAndHashCode
 public class Booking {
-    private static final AtomicLong ID_GENERATOR = new AtomicLong(1);
 
     private long id;
-    private User user;
-    private Car car;
+    private long userId;
+    private long carId;
     private Instant startDate;
     private Instant endDate;
     private Instant bookDate;
@@ -28,7 +30,7 @@ public class Booking {
     private BookingStatus bookingStatus;
 
 
-    Booking(final User user, final Car car, final Instant startDate, final Instant endDate) {
+    public Booking(long id, User user, Car car, Instant startDate, Instant endDate) {
         if (startDate.isAfter(endDate)) {
             throw new DateTimeException("Booking start date should be before booking end date");
         }
@@ -37,12 +39,12 @@ public class Booking {
             throw new DateTimeException("Dates cannot be equal");
         }
 
-        this.user = user;
-        this.car = car;
+        this.userId = user.getId();
+        this.carId = car.getId();
         this.startDate = startDate;
         this.endDate = endDate;
 
-        this.id = ID_GENERATOR.getAndIncrement();
+        this.id = id;
         this.bookDate = Instant.now();
 
         long seconds = Duration.between(startDate, endDate).getSeconds();
@@ -55,8 +57,8 @@ public class Booking {
     public static Booking fromParams(String[] params) {
         return Booking.builder()
                 .id(Long.parseLong(params[0]))
-                .user(User.builder().id(Long.parseLong(params[1])).build())
-                .car(Car.builder().id(Integer.parseInt(params[2])).build())
+                .userId(Long.parseLong(params[1]))
+                .carId(Long.parseLong(params[2]))
                 .startDate(Instant.parse(params[3]))
                 .endDate(Instant.parse(params[4]))
                 .bookDate(Instant.parse(params[5]))
