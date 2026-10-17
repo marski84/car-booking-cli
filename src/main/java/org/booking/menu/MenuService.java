@@ -70,14 +70,6 @@ public class MenuService {
         }
     }
 
-    public Set<Long> bookingsIds() {
-        return bookingFacade.getAll()
-                .stream()
-                .filter(b -> b.getBookingStatus() != BookingStatus.CANCELLED && b.getBookingStatus() != BookingStatus.COMPLETED)
-                .map(Booking::getId)
-                .collect(Collectors.toSet());
-    }
-
     public Set<Long> activeBookedCarIds() {
         return bookingFacade.getAll().stream()
                 .filter(b -> b.getBookingStatus() == BookingStatus.ACTIVE)
