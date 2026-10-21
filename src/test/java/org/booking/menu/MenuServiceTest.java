@@ -37,7 +37,7 @@ class MenuServiceTest {
 
     private final PrintStream originalOut = System.out;
     @Captor
-    ArgumentCaptor<Booking> bookingArgumentCaptor = ArgumentCaptor.forClass(Booking.class);
+    ArgumentCaptor<Booking> bookingArgumentCaptor;
     @Mock
     private UserFacade userFacade;
     @Mock
@@ -85,23 +85,16 @@ class MenuServiceTest {
     @Test
     void bookCarShouldHandleBooking() {
         when(userFacade.get(20L)).thenReturn(new User(20L, "Testuser"));
-        User user = userFacade.get(20L);
-
         when(carFacade.get(1L)).thenReturn(car(1L));
-        Car car = carFacade.get(1L);
 
         LocalDate startDate = LocalDate.now();
         LocalDate endDate = LocalDate.now().plusDays(20);
 
-        menuService.bookCar(
-                String.valueOf(user.getId()),
-                String.valueOf(car.getId()),
-                startDate,
-                endDate);
+        menuService.bookCar("20", "1", startDate, endDate);
 
         verify(bookingFacade).save(bookingArgumentCaptor.capture());
-        assertThat(bookingArgumentCaptor.getValue().getCarId()).isEqualTo(car.getId());
-        assertThat(bookingArgumentCaptor.getValue().getUserId()).isEqualTo(user.getId());
+        assertThat(bookingArgumentCaptor.getValue().getCarId()).isEqualTo(1L);
+        assertThat(bookingArgumentCaptor.getValue().getUserId()).isEqualTo(20L);
     }
 
 
@@ -175,7 +168,7 @@ class MenuServiceTest {
     }
 
     @Test
-    void viewAvailableElectricCars_shouldReturn() {
+    void viewAvailableElectricCarsShouldPrintOnlyElectricCars() {
         // given
         Car electricCar = Car.builder()
                 .id(4L)

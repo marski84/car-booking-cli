@@ -66,7 +66,7 @@ public class Menu {
             return;
         }
 
-        if (menuService.activeBookedCarIds().contains(bookingId.get())) {
+        if (!menuService.bookingsIds().contains(bookingId.get())) {
             promptUser("Booking either not found or in invalid status");
             return;
         }
